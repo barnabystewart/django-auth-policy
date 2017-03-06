@@ -10,6 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from django_auth_policy import signals
 from django_auth_policy.models import LoginAttempt
 from django_auth_policy import BasePolicy
+from django_auth_policy.settings import AUTH_POLICY_MAX_FAILED, AUTH_POLICY_LOCKOUT_DURATION
 
 
 logger = logging.getLogger(__name__)
@@ -120,12 +121,12 @@ class AuthenticationLockedUsername(AuthenticationPolicy):
     period.
     """
     # Number of failed login attempts
-    max_failed = 3
+    max_failed = AUTH_POLICY_MAX_FAILED
     # Period in seconds used to count number of failed login attempts,
     # None = indefinite
     period = None
     # Lockout duration in seconds
-    lockout_duration = 60 * 10
+    lockout_duration = AUTH_POLICY_LOCKOUT_DURATION
     # Validation error
     text = _(u'Too many failed login attempts. Your account has been locked '
              'for {duration}.')
@@ -191,11 +192,11 @@ class AuthenticationLockedRemoteAddress(AuthenticationPolicy):
     certain period.
     """
     # Number of failed login attempts
-    max_failed = 3
+    max_failed = AUTH_POLICY_MAX_FAILED
     # Period in seconds used to count number of failed login attempts
     period = None
     # Lockout duration in seconds
-    lockout_duration = 60 * 10
+    lockout_duration = AUTH_POLICY_LOCKOUT_DURATION
     # Validation error
     text = _(u'Too many failed login attempts. Your account has been locked '
              'for {duration}.')
