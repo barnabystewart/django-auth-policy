@@ -43,3 +43,10 @@ LOGIN_NOT_REQUIRED_MARKER = getattr(settings,
 # user's IP address of the request, such as 'HTTP_X_REAL_IP'.
 REMOTE_ADDR_HEADER = getattr(settings, 'AUTH_POLICY_REMOTE_ADDR_HEADER',
         'REMOTE_ADDR')
+
+# Set this to the number of attempts to allow before lockout
+AUTH_POLICY_MAX_FAILED = getattr(settings, 'AUTH_POLICY_MAX_FAILED', 3)
+
+# Set this to the lockout duration to enforce
+AUTH_POLICY_LOCKOUT_DURATION = getattr(settings, 'AUTH_POLICY_LOCKOUT_DURATION',
+                                       60 * 10)
