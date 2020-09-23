@@ -72,7 +72,7 @@ class LoginTests(TestCase):
             'username': 'rf', 'password': 'password'})
         self.assertEqual(resp.status_code, 302)
         self.assertTrue(SESSION_KEY in self.client.session)
-        self.assertEqual(self.client.session[SESSION_KEY], unicode(self.user.id))
+        self.assertEqual(self.client.session[SESSION_KEY], str(self.user.id))
 
         attempts = LoginAttempt.objects.filter(username=self.user.username,
                                                successful=True)
@@ -87,7 +87,7 @@ class LoginTests(TestCase):
     def test_username_lockout(self):
         """ Test too many failed login attempts for one username """
         pol = AuthenticationLockedUsername()
-        text = unicode(pol.validation_msg)
+        text = str(pol.validation_msg)
         for x in xrange(0, pol.max_failed):
 
             self.assertFalse(self.lockout_policy.is_locked('rf'))
@@ -146,7 +146,7 @@ class LoginTests(TestCase):
     def test_address_lockout(self):
         """ Test too many failed login attempts for one address """
         pol = AuthenticationLockedRemoteAddress()
-        text = unicode(pol.validation_msg)
+        text = str(pol.validation_msg)
 
         addr = '1.2.3.4'
 
@@ -213,7 +213,7 @@ class LoginTests(TestCase):
 
     def test_lock_period(self):
         pol = AuthenticationLockedUsername()
-        text = unicode(pol.validation_msg)
+        text = str(pol.validation_msg)
         for x in xrange(0, pol.max_failed + 1):
 
             req = self.factory.get(reverse('login'))
@@ -243,7 +243,7 @@ class LoginTests(TestCase):
     def test_unlock(self):
         """ Resetting lockout data unlocks user """
         pol = AuthenticationLockedUsername()
-        text = unicode(pol.validation_msg)
+        text = str(pol.validation_msg)
         for x in xrange(0, pol.max_failed + 1):
 
             req = self.factory.get(reverse('login'))
@@ -354,7 +354,7 @@ class PasswordChangeTests(TestCase):
             'username': 'rf', 'password': 'password'}, follow=True)
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(SESSION_KEY in self.client.session)
-        self.assertEqual(self.client.session[SESSION_KEY], unicode(self.user.id))
+        self.assertEqual(self.client.session[SESSION_KEY], str(self.user.id))
         self.assertTrue('password_change_enforce' in self.client.session)
         self.assertFalse(self.client.session['password_change_enforce'])
         self.assertFalse(self.client.session['password_change_enforce_msg'])
@@ -380,12 +380,12 @@ class PasswordChangeTests(TestCase):
             'username': 'rf', 'password': 'password'}, follow=True)
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(SESSION_KEY in self.client.session)
-        self.assertEqual(self.client.session[SESSION_KEY], unicode(self.user.id))
+        self.assertEqual(self.client.session[SESSION_KEY], str(self.user.id))
         self.assertTrue('password_change_enforce' in self.client.session)
         self.assertEqual(self.client.session['password_change_enforce'],
                          'password-expired')
         self.assertEqual(self.client.session['password_change_enforce_msg'],
-                         unicode(pol.text))
+                         str(pol.text))
         self.assertContains(resp, 'old_password')
         self.assertContains(resp, 'new_password1')
         self.assertContains(resp, 'new_password2')
@@ -438,11 +438,11 @@ class PasswordChangeTests(TestCase):
         self.assertEqual(resp.status_code, 302)
         self.assertTrue(SESSION_KEY in self.client.session)
         self.assertTrue('password_change_enforce' in self.client.session)
-        self.assertEqual(self.client.session[SESSION_KEY], unicode(self.user.id))
+        self.assertEqual(self.client.session[SESSION_KEY], str(self.user.id))
         self.assertEqual(self.client.session['password_change_enforce'],
                          'password-temporary')
         self.assertEqual(self.client.session['password_change_enforce_msg'],
-                         unicode(pol.text))
+                         str(pol.text))
 
         # Requesting a page shows password change view
         resp = self.client.get(reverse('login_required_view'), follow=True)
@@ -510,7 +510,7 @@ class PasswordStrengthTests(TestCase):
             'new_password2': short_passwd[:-1]})
 
         self.assertFalse(form.is_valid())
-        msg = unicode(pol.policy_text)
+        msg = str(pol.policy_text)
         self.assertEqual(form.errors['new_password1'], [msg])
 
         # Longer password does work
@@ -550,7 +550,7 @@ class PasswordStrengthTests(TestCase):
                 'new_password2': passwd})
             failing_policy = policies[-1]
             self.assertFalse(form.is_valid())
-            err_msg = unicode(failing_policy.policy_text)
+            err_msg = str(failing_policy.policy_text)
             self.assertEqual(form.errors['new_password1'], [err_msg])
 
             policies.rotate(1)
@@ -595,7 +595,7 @@ class PasswordStrengthTests(TestCase):
             self.assertEqual(form.is_valid(), valid)
             if not valid:
                 self.assertEqual(form.errors['new_password1'],
-                                 [unicode(policy.text)])
+                                 [str(policy.text)])
 
     def test_password_disallowed_terms(self):
         policy = PasswordDisallowedTerms(terms=['Testsite'])
@@ -610,7 +610,7 @@ class PasswordStrengthTests(TestCase):
                 'new_password2': passwd})
             self.assertEqual(form.is_valid(), valid)
             if not valid:
-                errs = [unicode(policy.policy_text)]
+                errs = [str(policy.policy_text)]
                 self.assertEqual(form.errors['new_password1'], errs)
 
     def test_password_limit_reuse(self):
@@ -634,7 +634,7 @@ class PasswordStrengthTests(TestCase):
             self.assertEqual(form.is_valid(), valid)
             if not valid:
                 self.assertEqual(form.errors['new_password1'],
-                                 [unicode(policy.policy_text)])
+                                 [str(policy.policy_text)])
 
     def test_authentication_username_whitelist(self):
         policy = AuthenticationUsernameWhitelist(
