@@ -11,8 +11,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if not args:
-            print ("Please provide one or more file paths for files with "
-                   "password lists.")
+            print("Please provide one or more file paths for files with password lists.")
             return
 
         for arg in args:
@@ -30,6 +29,6 @@ class Command(BaseCommand):
                 except ValidationError:
                     continue
 
-                print pw.encode('utf8')
+                print(pw.encode('utf8'))
 
             fh.close()

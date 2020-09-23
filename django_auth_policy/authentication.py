@@ -95,7 +95,7 @@ class AuthenticationDisableExpiredUsers(AuthenticationPolicy):
 
         for user in expired:
             logger.info(u'User %s disabled because last login was at %s',
-                        unicode(user), user.last_login)
+                        str(user), user.last_login)
             # Send signal to be used to alert admins
             signals.user_expired.send(sender=user, user=user)
 

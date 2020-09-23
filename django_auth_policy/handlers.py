@@ -95,7 +95,7 @@ class PasswordChangePolicyHandler(object):
                             user, exc.code)
             request.session['password_change_enforce'] = exc.code
             request.session['password_change_enforce_msg'] = \
-                unicode(exc.message)
+                str(exc.message)
         else:
             request.session['password_change_enforce'] = False
             request.session['password_change_enforce_msg'] = None

@@ -9,9 +9,10 @@ from django_auth_policy import BasePolicy
 from django_auth_policy.models import PasswordChange
 
 
+
 def _normalize_unicode(value):
     try:
-        value = unicodedata.normalize('NFKD', unicode(value))
+        value = unicodedata.normalize('NFKD', str(value))
         return value.encode('ascii', 'ignore').strip().lower()
     except UnicodeDecodeError:
         return value
